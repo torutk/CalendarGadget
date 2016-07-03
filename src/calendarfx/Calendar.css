@@ -1,0 +1,38 @@
+/*
+Copyright (C) 2016 Toru Takahahshi. All Rights Reserved.
+*/
+/* 
+    Created on : 2016/07/03, 10:13:20
+    Author     : toru
+*/
+.context-menu {
+    -fx-background-color: lightgrey;
+}
+
+.menu-item {
+    -fx-font-size: 16;
+    -fx-padding: 8 12 8 12;
+    -fx-border-style: solid;
+    -fx-border-color: darkgrey;
+    -fx-border-radius: 4;
+}
+
+.menu-item:hover {
+    -fx-background-radius: 4;
+}
+
+.menu-item:focused {
+    -fx-background-radius: 4;
+}
+
+.date-picker-popup > * > .next-month,
+.date-picker-popup > * > .previous-month {
+    -fx-text-fill: derive(-fx-text-base-color, 80%);
+}
+.date-picker-popup > .month-year-pane {
+    -fx-padding: 0.2em 0.2em 0.2em 0.2em;
+}
+.date-picker-popup > * > .day-cell {
+    -fx-padding: 0 0 0 0;
+    -fx-font-size: 0.72em;
+}
