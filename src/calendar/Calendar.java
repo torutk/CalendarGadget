@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * カレンダーを表示するJavaFXアプリケーションクラス。
@@ -29,6 +30,7 @@ public class Calendar extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("Calendar.css").toExternalForm());
         
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
         primaryStage.show();
