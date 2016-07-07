@@ -27,6 +27,7 @@ public class Calendar extends Application {
         root.getChildren().add(calendar);
         
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("Calendar.css").toExternalForm());
         
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
