@@ -33,11 +33,11 @@ public class Calendar extends Application {
         parseParameters();
 
         DatePicker datePicker = new DatePicker(LocalDate.now());
+        // 日付セルのファクトリを定義し、曜日名（英名）をスタイルクラスに追加した日付を生成
         datePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                System.out.println("styleClass=" + this.getStyleClass());
                 getStyleClass().add(DayOfWeek.from(item).getDisplayName(TextStyle.FULL, Locale.US).toLowerCase());
             }
         });
