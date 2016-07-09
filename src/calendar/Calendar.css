@@ -32,8 +32,11 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
 .date-picker-popup > * > .today.selected {
     -fx-background-color: -fx-selection-bar, derive(-fx-selection-bar-non-focused, -20%), -fx-selection-bar;
 }
-/*
-.date-picker-popup > * > .today:focused {
-    -fx-background-color: -fx-control-inner-background, -fx-cell-focus-inner-border, -fx-control-inner-background;
+/* 土曜日の文字色の設定 */
+.date-picker-popup > * > .day-cell.saturday {
+    -fx-text-fill: dodgerblue;
 }
-*/
+/* 日曜日の文字色の設定 */
+.date-picker-popup > * > .day-cell.sunday {
+    -fx-text-fill: mediumvioletred;
+}

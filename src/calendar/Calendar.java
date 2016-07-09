@@ -4,12 +4,16 @@
 package calendar;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -24,10 +28,20 @@ public class Calendar extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        // コマンドライン引数の解析
         stage = primaryStage;
         parseParameters();
-        DatePickerSkin datePickerSkin = new DatePickerSkin(new DatePicker(LocalDate.now()));
-        Node calendar = datePickerSkin.getPopupContent();
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                System.out.println("styleClass=" + this.getStyleClass());
+                getStyleClass().add(DayOfWeek.from(item).getDisplayName(TextStyle.FULL, Locale.US).toLowerCase());
+            }
+        });
+        Node calendar = new DatePickerSkin(datePicker).getPopupContent();
         
         StackPane root = new StackPane();
         root.getChildren().add(calendar);
