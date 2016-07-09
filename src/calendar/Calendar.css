@@ -18,3 +18,22 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
 .date-picker-popup > .month-year-pane {
     -fx-padding: 0.1em 0.2em 0.1em 0.2em;
 }
+/* 先月および今月の日付の文字色を目立たなく（淡く）する */
+.date-picker-popup > * > .next-month,
+.date-picker-popup > * > .previous-month {
+    -fx-text-fill: derive(-fx-text-base-color, 80%);
+}
+/* 今日の日付の背景色・文字色を変更 */
+.date-picker-popup > * > .today {
+    -fx-background-color: -fx-control-inner-background, magenta, -fx-control-inner-background;
+    -fx-font-weight: bold;
+}
+.date-picker-popup > * > .today:hover,
+.date-picker-popup > * > .today.selected {
+    -fx-background-color: -fx-selection-bar, derive(-fx-selection-bar-non-focused, -20%), -fx-selection-bar;
+}
+/*
+.date-picker-popup > * > .today:focused {
+    -fx-background-color: -fx-control-inner-background, -fx-cell-focus-inner-border, -fx-control-inner-background;
+}
+*/
