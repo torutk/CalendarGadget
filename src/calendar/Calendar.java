@@ -58,6 +58,7 @@ public class Calendar extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(e -> executor.shutdownNow());
         primaryStage.show();
     }
 
