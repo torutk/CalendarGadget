@@ -19,12 +19,12 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
     -fx-padding: 0.1em 0.2em 0.1em 0.2em;
 }
 /* 今日の日付の背景色・文字色を変更 */
-.date-picker-popup > * > .today {
+.date-picker-popup > * > .today,
+.date-picker-popup > * > .today.selected {
     -fx-background-color: -fx-control-inner-background, magenta, -fx-control-inner-background;
     -fx-font-weight: bold;
 }
-.date-picker-popup > * > .today:hover,
-.date-picker-popup > * > .today.selected {
+.date-picker-popup > * > .today:hover {
     -fx-background-color: -fx-selection-bar, derive(-fx-selection-bar-non-focused, -20%), -fx-selection-bar;
 }
 /* 土曜日の文字色の設定 */
@@ -43,4 +43,8 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
 .date-picker-popup > * > .previous-month.sunday,
 .date-picker-popup > * > .previous-month.saturday {
     -fx-text-fill: derive(-fx-text-base-color, 80%);
+}
+/* 選択時の色変更を無効に */ 
+.date-picker-popup > * > .selected {
+    -fx-background: -fx-control-inner-background;
 }
