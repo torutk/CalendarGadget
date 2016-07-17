@@ -18,11 +18,6 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
 .date-picker-popup > .month-year-pane {
     -fx-padding: 0.1em 0.2em 0.1em 0.2em;
 }
-/* 先月および今月の日付の文字色を目立たなく（淡く）する */
-.date-picker-popup > * > .next-month,
-.date-picker-popup > * > .previous-month {
-    -fx-text-fill: derive(-fx-text-base-color, 80%);
-}
 /* 今日の日付の背景色・文字色を変更 */
 .date-picker-popup > * > .today {
     -fx-background-color: -fx-control-inner-background, magenta, -fx-control-inner-background;
@@ -39,4 +34,13 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
 /* 日曜日の文字色の設定 */
 .date-picker-popup > * > .day-cell.sunday {
     -fx-text-fill: mediumvioletred;
+}
+/* 先月および今月の日付の文字色を目立たなく（淡く）する */
+.date-picker-popup > * > .next-month,
+.date-picker-popup > * > .next-month.sunday,
+.date-picker-popup > * > .next-month.saturday,
+.date-picker-popup > * > .previous-month,
+.date-picker-popup > * > .previous-month.sunday,
+.date-picker-popup > * > .previous-month.saturday {
+    -fx-text-fill: derive(-fx-text-base-color, 80%);
 }
