@@ -16,7 +16,8 @@ These installers are self-contained application installable packages, so no JDK 
 
 ### after build
 
-- execute an executable jar for all platform. (required JDK or JRE 8+)
+- execute an executable jar for all platform. (required JDK or JRE 8)
+- Not run on JDK 9
 
 ### after install of self-contained applicaiton package(MSI)
 
