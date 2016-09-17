@@ -34,6 +34,7 @@ public class Calendar extends Application {
     private Stage stage;
     private ScheduledExecutorService executor;
     private LocalDate today;
+    private Holidays holidays;
     private Pane rootPane;
     private Node calendar;
 
@@ -76,6 +77,9 @@ public class Calendar extends Application {
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 getStyleClass().add(DayOfWeek.from(item).getDisplayName(TextStyle.FULL, Locale.US).toLowerCase());
+                if (holidays.contains(item)) {
+                    getStyleClass().add("holiday");
+                }
             }
         });
         Node calendar = new DatePickerSkin(datePicker).getPopupContent();
@@ -112,7 +116,10 @@ public class Calendar extends Application {
     }
 
     /**
-     * コマンドラインオプション（名前付き値）を解析し、表示位置・大きさの指定があれば反映する。
+     * コマンドラインオプション（名前付き値）を解析する。
+     * 
+     * 表示位置・大きさの指定があれば反映する。
+     * 祝日設定ファイルが指定されていれば読み込む。
      */
     private void parseParameters() {
         Map<String, String> params = getParameters().getNamed();
@@ -122,6 +129,7 @@ public class Calendar extends Application {
             stage.setWidth(Double.valueOf(params.getOrDefault("width", "144")));
             stage.setHeight(Double.valueOf(params.getOrDefault("height", "144")));
         });
+        holidays = new Holidays(params.getOrDefault("holiday", "holidays.conf"));
     }
 
     /**

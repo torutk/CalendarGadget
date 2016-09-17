@@ -32,16 +32,19 @@ Copyright © 2016 Toru Takahahshi. All rights reserved.
     -fx-text-fill: dodgerblue;
 }
 /* 日曜日の文字色の設定 */
-.date-picker-popup > * > .day-cell.sunday {
+.date-picker-popup > * > .day-cell.sunday,
+.date-picker-popup > * > .day-cell.holiday {
     -fx-text-fill: mediumvioletred;
 }
 /* 先月および今月の日付の文字色を目立たなく（淡く）する */
 .date-picker-popup > * > .next-month,
 .date-picker-popup > * > .next-month.sunday,
 .date-picker-popup > * > .next-month.saturday,
+.date-picker-popup > * > .next-month.holiday,
 .date-picker-popup > * > .previous-month,
 .date-picker-popup > * > .previous-month.sunday,
-.date-picker-popup > * > .previous-month.saturday {
+.date-picker-popup > * > .previous-month.saturday,
+.date-picker-popup > * > .previous-month.holiday {
     -fx-text-fill: derive(-fx-text-base-color, 80%);
 }
 /* 選択時の色変更を無効に */ 
