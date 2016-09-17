@@ -32,6 +32,7 @@ The command-line options are available as follows.
 |top left y coordinate | y     | --y=60  |
 |calendar width        | width | --width=320 |
 |calendar height       | height| --height=300 |
+|holidays configuration file | holiday | --holiday=holicays.conf |
 
 ### configuration file for a self-contained application package(MSI)
 
