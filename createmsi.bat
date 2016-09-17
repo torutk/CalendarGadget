@@ -6,7 +6,7 @@ javapackager -deploy -native msi ^
 -srcdir dist -srcfiles Calendar.jar ^
 -appclass calendar.Calendar ^
 -name "Calendar" ^
--BappVersion=0.1.8 ^
+-BappVersion=0.2.0 ^
 -title "Calendar" ^
 -vendor Takahashi ^
 -description "Calendar on desktop"
