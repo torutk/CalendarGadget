@@ -46,8 +46,8 @@ public class Holidays {
      *
      */
     private void readFromPath(Path path) {
-        try {
-            holidays = toDates(Files.lines(path));
+        try (Stream<String> lines = Files.lines(path)) {
+            holidays = toDates(lines);
             logger.config(() -> String.format("Holidays are configured by file '%s'", path));
         } catch (IOException ex) {
             logger.config(() -> String.format("Holidays configure file '%s' cannot read because %s", path, ex.getLocalizedMessage()));
