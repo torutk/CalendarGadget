@@ -10,11 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -31,6 +34,7 @@ import javafx.stage.StageStyle;
  *
  */
 public class Calendar extends Application {
+    private static final Logger logger = Logger.getLogger(Calendar.class.getName());
     private Stage stage;
     private ScheduledExecutorService executor;
     private LocalDate today;
@@ -70,6 +74,7 @@ public class Calendar extends Application {
      * @return カレンダー表示ノード
      */
     private Node createDatePickerPopup(LocalDate date) {
+        logger.entering(this.getClass().getName(), "createDatePickerPopup");
         DatePicker datePicker = new DatePicker(date);
         // 日付セルのファクトリを定義し、曜日名（英名）をスタイルクラスに追加した日付を生成
         datePicker.setDayCellFactory(picker -> new DateCell() {
@@ -130,8 +135,19 @@ public class Calendar extends Application {
             stage.setHeight(Double.valueOf(params.getOrDefault("height", "144")));
         });
         holidays = new Holidays(params.getOrDefault("holiday", "holidays.conf"));
+        verboseLogging(params.getOrDefault("verbose", "v"));
     }
 
+    private void verboseLogging(String vs) {
+        Level verbose = vs.length() < 1 ? Level.INFO
+                : vs.length() == 1 ? Level.CONFIG
+                : vs.length() == 2 ? Level.FINE
+                : vs.length() == 3 ? Level.FINER
+                : Level.FINEST;
+        Logger.getLogger("calendar").setLevel(verbose);
+        Arrays.stream(Logger.getLogger("").getHandlers()).forEach(handler -> handler.setLevel(verbose));
+    }
+    
     /**
      * @param args コマンドライン引数
      */

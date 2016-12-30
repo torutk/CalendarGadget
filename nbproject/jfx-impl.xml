@@ -327,26 +327,48 @@
         <property name="ant-javafx.jar.location" value="${platform.home}${file.separator}tools${file.separator}ant-javafx.jar"/>
     </target>
     <target name="-check-ant-javafx-in-probjdk-lib" unless="ant-javafx.jar.location">
+        <condition property="do.set.ant-javafx.in.probjdk.lib.has_jre">
+            <available file="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar"/>
+        </condition>
+        <condition property="do.set.ant-javafx.in.probjdk.lib.no_jre">
+            <available file="${java.home}${file.separator}lib${file.separator}ant-javafx.jar"/>
+        </condition>
         <condition property="do.set.ant-javafx.in.probjdk.lib">
             <and>
                 <not><isset property="ant-javafx.jar.location"/></not>
-                <available file="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar"/>
+                <or>
+                    <isset property="do.set.ant-javafx.in.probjdk.lib.has_jre"/>
+                    <isset property="do.set.ant-javafx.in.probjdk.lib.no_jre"/>
+                </or>
             </and>
         </condition>
     </target>
     <target name="-set-ant-javafx-in-probjdk-lib" depends="-set-ant-javafx-in-platform-home-tools,-check-ant-javafx-in-probjdk-lib" if="do.set.ant-javafx.in.probjdk.lib">
-        <property name="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar"/>
+        <condition property="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar" else="${java.home}${file.separator}lib${file.separator}ant-javafx.jar">
+            <isset property="do.set.ant-javafx.in.probjdk.lib.has_jre"/>
+        </condition>
     </target>
     <target name="-check-ant-javafx-in-probjdk-tools" unless="ant-javafx.jar.location">
+        <condition property="do.set.ant-javafx.in.probjdk.tools.has_jre">
+            <available file="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar"/>
+        </condition>
+        <condition property="do.set.ant-javafx.in.probjdk.tools.no_jre">
+            <available file="${java.home}${file.separator}tools${file.separator}ant-javafx.jar"/>
+        </condition>
         <condition property="do.set.ant-javafx.in.probjdk.tools">
             <and>
                 <not><isset property="ant-javafx.jar.location"/></not>
-                <available file="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar"/>
+                <or>
+                    <isset property="do.set.ant-javafx.in.probjdk.tools.has_jre"/>
+                    <isset property="do.set.ant-javafx.in.probjdk.tools.no_jre"/>
+                </or>
             </and>
         </condition>
     </target>
     <target name="-set-ant-javafx-in-probjdk-tools" depends="-set-ant-javafx-in-probjdk-lib,-check-ant-javafx-in-probjdk-tools" if="do.set.ant-javafx.in.probjdk.tools">
-        <property name="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar"/>
+        <condition property="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar" else="${java.home}${file.separator}tools${file.separator}ant-javafx.jar">
+            <isset property="do.set.ant-javafx.in.probjdk.tools.has_jre"/>
+        </condition>
     </target>
     <target name="-check-ant-javafx-in-macjdk-lib" unless="ant-javafx.jar.location">
         <condition property="do.set.ant-javafx.in.macjdk.lib">
@@ -1825,6 +1847,25 @@
                     
                     // manifest
                     var man = jar.createManifest();
+                    var userManifestPath = project.getProperty("manifest.file");
+                    if (userManifestPath) {
+                        var userManifestFile = project.resolveFile(userManifestPath);
+                        if (userManifestFile.isFile()) {
+                            var manifestEncoding = project.getProperty("manifest.encoding");
+                            var userManifestReader = manifestEncoding ?
+                                    new java.io.InputStreamReader(
+                                        new java.io.FileInputStream(userManifestFile),
+                                        manifestEncoding) :
+                                    new java.io.InputStreamReader(
+                                        new java.io.FileInputStream(userManifestFile));
+                            try {
+                                var userManifest = new org.apache.tools.ant.taskdefs.Manifest(userManifestReader);
+                                man.merge(userManifest);
+                            } finally {
+                                userManifestReader.close();
+                            }
+                        }
+                    }
                     var a1val = new String(project.getProperty("application.vendor"));
                     var a1 = new org.apache.tools.ant.taskdefs.Manifest.Attribute();
                     a1.setName("Implementation-Vendor");
@@ -3676,8 +3717,7 @@
         <property name="run.jvmargs.ide" value=""/>        
         <java jar="${temp.run.jar}" dir="${work.dir}" fork="true" jvm="${platform.java}">
             <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
-            <jvmarg line="${debug-args-line}"/>
-            <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+            <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
             <jvmarg value="-Dglass.disableGrab=true"/>
             <jvmarg value="-Dfile.encoding=${runtime.encoding}"/>
             <redirector errorencoding="${runtime.encoding}" inputencoding="${runtime.encoding}" outputencoding="${runtime.encoding}"/>
@@ -3734,18 +3774,6 @@
     <!-- Shared Debugging init -->
 
     <target name="-init-debug-args">
-        <property name="version-output" value="java version &quot;${ant.java.version}"/>
-        <condition property="have-jdk-older-than-1.4">
-            <or>
-                <contains string="${version-output}" substring="java version &quot;1.0"/>
-                <contains string="${version-output}" substring="java version &quot;1.1"/>
-                <contains string="${version-output}" substring="java version &quot;1.2"/>
-                <contains string="${version-output}" substring="java version &quot;1.3"/>
-            </or>
-        </condition>
-        <condition else="-Xdebug" property="debug-args-line" value="-Xdebug -Xnoagent -Djava.compiler=none">
-            <istrue value="${have-jdk-older-than-1.4}"/>
-        </condition>
         <condition else="dt_socket" property="debug-transport-by-os" value="dt_shmem">
             <os family="windows"/>
         </condition>
@@ -3817,7 +3845,7 @@
     <target name="-debug-javaws-debuggee" depends="-init-debug-args">
         <echo message="Executing ${jfx.deployment.jnlp} in debug mode using ${active.webstart.executable}"/>
         <exec executable="${active.webstart.executable}">
-            <env key="JAVAWS_VM_ARGS" value="${debug-args-line} -Xrunjdwp:transport=${debug-transport},address=${jpda.address} -Dglass.disableGrab=true"/>
+            <env key="JAVAWS_VM_ARGS" value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address} -Dglass.disableGrab=true"/>
             <arg value="-wait"/>
             <arg file="${jfx.deployment.jnlp}"/>
         </exec>
