@@ -58,7 +58,7 @@ public class Calendar extends Application {
         scene.getStylesheets().add(getClass().getResource("Calendar.css").toExternalForm());
 
         executor = Executors.newSingleThreadScheduledExecutor();
-        executor.schedule(this::crossoverDate, secondsTillTomorrow(LocalDateTime.now()), TimeUnit.SECONDS);
+        crossoverDate();
 
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Calendar");
@@ -93,10 +93,13 @@ public class Calendar extends Application {
 
     /**
      * 指定した時間から日付が変わるまでの時間（秒）を計算する。
+     * <p>
+     * @return 日付が変わるまでの時間（秒）、ただし3600秒を超えている場合は、3600を返却する
      */
     private long secondsTillTomorrow(LocalDateTime time) {
         LocalDateTime tomorrow = time.plusDays(1).with(LocalTime.MIDNIGHT);
-        return Duration.between(time, tomorrow).getSeconds();
+        long seconds = Duration.between(time, tomorrow).getSeconds();
+        return seconds > 3600 ? 3600 : seconds;
     }
 
     /**
@@ -112,12 +115,15 @@ public class Calendar extends Application {
         LocalDateTime now = LocalDateTime.now();
         if (today.isBefore(now.toLocalDate())) {
             Platform.runLater(() -> {
-                today = today.plusDays(1);
+                today = now.toLocalDate();
                 rootPane.getChildren().remove(calendar);
-                rootPane.getChildren().add(createDatePickerPopup(today));
+                calendar = createDatePickerPopup(today);
+                rootPane.getChildren().add(calendar);
             });
         }
-        executor.schedule(this::crossoverDate, secondsTillTomorrow(now), TimeUnit.SECONDS);
+        long seconds = secondsTillTomorrow(now);
+        executor.schedule(this::crossoverDate, seconds, TimeUnit.SECONDS);
+        logger.config(() -> String.format("reset crossover date schedule after %d seconds.", seconds));
     }
 
     /**
