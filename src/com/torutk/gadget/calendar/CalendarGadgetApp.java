@@ -1,7 +1,7 @@
 /*
  * Copyright © 2016 Toru Takahahshi. All rights reserved.
  */
-package calendar;
+package com.torutk.gadget.calendar;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import java.time.DayOfWeek;
@@ -33,8 +33,8 @@ import javafx.stage.StageStyle;
  * カレンダーを表示するJavaFXアプリケーションクラス。
  *
  */
-public class Calendar extends Application {
-    private static final Logger logger = Logger.getLogger(Calendar.class.getName());
+public class CalendarGadgetApp extends Application {
+    private static final Logger logger = Logger.getLogger(CalendarGadgetApp.class.getName());
     private Stage stage;
     private ScheduledExecutorService executor;
     private LocalDate today;

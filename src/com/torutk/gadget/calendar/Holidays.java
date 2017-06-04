@@ -1,7 +1,7 @@
 /*
  * Copyright © 2016 Toru Takahahshi. All rights reserved.
  */
-package calendar;
+package com.torutk.gadget.calendar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
