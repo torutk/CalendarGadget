@@ -4,6 +4,7 @@
 package com.torutk.gadget.calendar;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
+import com.torutk.gadget.support.TinyGadgetSupport;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -18,8 +19,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.DateCell;
@@ -27,7 +30,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * カレンダーを表示するJavaFXアプリケーションクラス。
@@ -47,7 +50,8 @@ public class CalendarGadgetApp extends Application {
         // コマンドライン引数の解析
         stage = primaryStage;
         parseParameters();
-
+        new TinyGadgetSupport(stage, Preferences.userNodeForPackage(this.getClass()));
+        
         today = LocalDate.now();
         calendar = createDatePickerPopup(today);
 
@@ -60,10 +64,13 @@ public class CalendarGadgetApp extends Application {
         executor = Executors.newSingleThreadScheduledExecutor();
         crossoverDate();
 
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(e -> executor.shutdownNow());
+        EventHandler<WindowEvent> closeHandler = primaryStage.getOnCloseRequest();
+        primaryStage.setOnCloseRequest(e -> {
+            executor.shutdownNow();
+            closeHandler.handle(e);
+        });
         primaryStage.show();
     }
 
@@ -135,10 +142,18 @@ public class CalendarGadgetApp extends Application {
     private void parseParameters() {
         Map<String, String> params = getParameters().getNamed();
         Platform.runLater(() -> {
-            stage.setX(Double.valueOf(params.getOrDefault("x", "0.0")));
-            stage.setY(Double.valueOf(params.getOrDefault("y", "0.0")));
-            stage.setWidth(Double.valueOf(params.getOrDefault("width", "144")));
-            stage.setHeight(Double.valueOf(params.getOrDefault("height", "144")));
+            if (params.containsKey("x")) {
+                stage.setX(Double.valueOf(params.get("x")));
+            }
+            if (params.containsKey("y")) {
+                stage.setY(Double.valueOf(params.get("y")));
+            }
+            if (params.containsKey("width")) {
+                stage.setWidth(Double.valueOf(params.get("width")));
+            }
+            if (params.containsKey("height")) {
+                stage.setHeight(Double.valueOf(params.get("height")));
+            }
         });
         holidays = new Holidays(params.getOrDefault("holiday", "holidays.conf"));
         verboseLogging(params.getOrDefault("verbose", "v"));
