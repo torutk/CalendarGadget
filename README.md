@@ -23,6 +23,14 @@ These installers are self-contained application installable packages, so no JDK 
 
 - execute a short-cut icon or a native executable file
 
+### gadget common functions support
+
+- move window by mouse dragging
+- resize window by Ctrl key + mouse wheeling
+- close window by context menu (pop up by right mouse button)
+- save window position and size when closing, load these status on start.
+(command-line option is priority than this save and load status)
+
 ### command-line options
 
 The command-line options are available as follows.
