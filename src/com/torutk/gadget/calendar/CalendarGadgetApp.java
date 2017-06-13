@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.DateCell;
@@ -30,7 +29,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * カレンダーを表示するJavaFXアプリケーションクラス。
@@ -66,10 +64,10 @@ public class CalendarGadgetApp extends Application {
 
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
-        EventHandler<WindowEvent> closeHandler = primaryStage.getOnCloseRequest();
-        primaryStage.setOnCloseRequest(e -> {
-            executor.shutdownNow();
-            closeHandler.handle(e);
+        primaryStage.showingProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue == true && newValue == false) {
+                executor.shutdownNow();
+            }
         });
         primaryStage.show();
     }
