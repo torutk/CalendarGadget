@@ -6,5 +6,6 @@ module com.torutk.gadget.calendar {
     requires java.prefs;
     requires javafx.controls;
     requires com.torutk.gadget.support;
+    requires java.desktop;
     opens com.torutk.gadget.calendar;
 }

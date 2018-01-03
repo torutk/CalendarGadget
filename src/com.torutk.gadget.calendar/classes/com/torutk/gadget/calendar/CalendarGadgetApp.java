@@ -5,6 +5,9 @@ package com.torutk.gadget.calendar;
 
 
 import com.torutk.gadget.support.TinyGadgetSupport;
+import java.awt.Desktop;
+import java.awt.desktop.SystemSleepEvent;
+import java.awt.desktop.SystemSleepListener;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -16,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +43,7 @@ public class CalendarGadgetApp extends Application {
     private static final Logger logger = Logger.getLogger(CalendarGadgetApp.class.getName());
     private Stage stage;
     private ScheduledExecutorService executor;
+    private ScheduledFuture<?> schedule;
     private LocalDate today;
     private Holidays holidays;
     private Pane rootPane;
@@ -63,6 +68,8 @@ public class CalendarGadgetApp extends Application {
         executor = Executors.newSingleThreadScheduledExecutor();
         crossoverDate();
 
+        initResumeProc();
+        
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
         primaryStage.showingProperty().addListener((observable, oldValue, newValue) -> {
@@ -174,6 +181,25 @@ public class CalendarGadgetApp extends Application {
     public static void main(String[] args) {
         System.out.println("Calendar program start");
         launch(args);
+    }
+
+    private void initResumeProc() {
+        Desktop desktop = Desktop.getDesktop();
+        desktop.addAppEventListener(new SystemSleepListener() {
+            @Override
+            public void systemAboutToSleep(SystemSleepEvent e) {
+                logger.info("Detect system about to sleep.");
+            }
+
+            @Override
+            public void systemAwoke(SystemSleepEvent e) {
+                logger.info("Detect system awake.");
+                if (schedule != null ) {
+                    schedule.cancel(true);
+                }
+                crossoverDate();
+            }
+        });
     }
 
 }
