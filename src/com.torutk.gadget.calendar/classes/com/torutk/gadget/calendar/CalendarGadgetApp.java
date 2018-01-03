@@ -3,7 +3,7 @@
  */
 package com.torutk.gadget.calendar;
 
-import com.sun.javafx.scene.control.skin.DatePickerSkin;
+
 import com.torutk.gadget.support.TinyGadgetSupport;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -26,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
