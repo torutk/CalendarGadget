@@ -20,3 +20,8 @@ nbproject/UPDATED.txt
 
 # Misc
 *.lnk
+runtime/
+*.wixobj
+*.wixpdb
+runtime.wxs
+*.msi
