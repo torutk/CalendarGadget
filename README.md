@@ -5,7 +5,8 @@ JavaFX calendar program to alternate for a desktop calendar gadget
 
 ## how to build
 
-This repository has a source projects of Calendar program to build with NetBeans IDE 8.1 and Java SE 8.
+This repository has a source projects of Calendar program to build with Gradle 6.4+ and Java SE 11+.
+Additionally, to create Windows installer with Java SE 14+ and WiX 3.10+.
 
 ## built binary
 
@@ -16,8 +17,7 @@ These installers are self-contained application installable packages, so no JDK 
 
 ### after build
 
-- execute an executable jar for all platform. (required JDK or JRE 8)
-- Not run on JDK 9
+- execute an executable jar for all platform. (required JDK 11)
 
 ### after install of self-contained applicaiton package(MSI)
 
@@ -47,5 +47,3 @@ The command-line options are available as follows.
 
 The configuration file 'Calendar.cfg' is in 'app' folder in the installed folder.
 JVM options and command-line options are descriptable in the file.
-
-

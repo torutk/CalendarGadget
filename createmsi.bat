@@ -1,13 +1,24 @@
 @echo off
 
-"%JAVA_HOME%"\bin\javapackager -deploy -native msi ^
--v ^
--outdir dist -outfile CalendarGadget ^
--srcdir dist -srcfiles CalendarGadget.jar;lib\GadgetSupport.jar ^
--appclass com.torutk.gadget.calendar.CalendarGadgetApp ^
--name "Calendar" ^
--BappVersion=0.4.0 ^
--title "Calendar" ^
--vendor Takahashi ^
--description "Calendar on desktop"
+REM increment the version number each creation.
+set APP_VERSION=0.5.1
+
+"%JAVA_HOME%"\bin\jpackage ^
+--type msi ^
+--win-upgrade-uuid f849420c-ec88-42b0-bc38-20fda41cc51d ^
+--win-menu-group "High Bridge" ^
+--win-menu ^
+--win-shortcut ^
+--app-version %APP_VERSION% ^
+--description "Calendar on desktop" ^
+--name "CalendarGadget" ^
+--dest build\installer ^
+--vendor Takahashi ^
+--module-path build\libs;javafx-gadgetsupport\build\libs ^
+--module com.torutk.gadget.calendar ^
+--java-options "-Xms32m -Xmx64m -Xss256k -XX:TieredStopAtLevel=1 -XX:CICompilerCount=2 -XX:CompileThreshold=1500 -XX:InitialCodeCacheSize=160k -XX:ReservedCodeCacheSize=32m -XX:MetaspaceSize=12m -XX:+UseSerialGC" ^
+--verbose
+
+
+
 
