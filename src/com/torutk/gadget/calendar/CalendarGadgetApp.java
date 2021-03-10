@@ -51,11 +51,12 @@ public class CalendarGadgetApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        var support = TinyGadgetSupport.ofTaskbarless(primaryStage, Preferences.userNodeForPackage(this.getClass()));
+        stage = support.getTransparentStage();
+
         // コマンドライン引数の解析
-        stage = primaryStage;
         parseParameters();
-        new TinyGadgetSupport(stage, Preferences.userNodeForPackage(this.getClass()));
-        
+
         today = LocalDate.now();
         calendar = createDatePickerPopup(today);
 
@@ -69,14 +70,14 @@ public class CalendarGadgetApp extends Application {
         crossoverDate();
         initResumeProc();
 
-        primaryStage.setTitle("Calendar");
-        primaryStage.setScene(scene);
-        primaryStage.showingProperty().addListener((observable, oldValue, newValue) -> {
+        stage.setTitle("Calendar");
+        stage.setScene(scene);
+        stage.showingProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue == true && newValue == false) {
                 executor.shutdownNow();
             }
         });
-        primaryStage.show();
+        stage.show();
     }
 
     /**
