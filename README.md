@@ -19,16 +19,16 @@ These installers are self-contained application installable packages, so no JDK 
 
 - execute an executable jar for all platform. (required JDK 11)
 
-### after install of self-contained applicaiton package(MSI)
+### after install of self-contained application package(MSI)
 
 - execute a short-cut icon or a native executable file
 
 ### gadget common functions support
 
-- move window by mouse dragging
+- move window by a mouse dragging
 - resize window by Ctrl key + mouse wheeling
 - close window by context menu (pop up by right mouse button)
-- save window position and size when closing, load these status on start.
+- save window position and size when closing, load these statuses on start.
 (command-line option is priority than this save and load status)
 
 ### command-line options
@@ -41,9 +41,9 @@ The command-line options are available as follows.
 |top left y coordinate | y     | --y=60  |
 |calendar width        | width | --width=320 |
 |calendar height       | height| --height=300 |
-|holidays configuration file | holiday | --holiday=holicays.conf |
+|holidays configuration file | holiday | --holiday=holidays.conf |
 
 ### configuration file for a self-contained application package(MSI)
 
 The configuration file 'Calendar.cfg' is in 'app' folder in the installed folder.
-JVM options and command-line options are descriptable in the file.
+JVM options and command-line options are describable in the file.

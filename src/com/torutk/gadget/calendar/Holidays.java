@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Toru Takahahshi. All rights reserved.
+ * Copyright © 2016 Toru Takahashi. All rights reserved.
  */
 package com.torutk.gadget.calendar;
 
@@ -62,7 +62,7 @@ public class Holidays {
             holidays = toDates(reader.lines());
             logger.config(() -> String.format("Holidays are configured by resource '%S'", RESOURCE_NAME));
         } catch (IOException ex) {
-            logger.warning(() -> String.format("holidays cannot be configured, resource '%s' read error:", RESOURCE_NAME, ex.getLocalizedMessage()));
+            logger.warning(() -> String.format("holidays cannot be configured, resource '%s' read error: %s", RESOURCE_NAME, ex.getLocalizedMessage()));
         }
     }
 
@@ -73,7 +73,7 @@ public class Holidays {
     private List<LocalDate> toDates(Stream<String> stream) {
         return stream.filter(s -> !s.isEmpty())
                 .filter(s -> !s.startsWith("#"))
-                .map(s -> LocalDate.parse(s))
+                .map(LocalDate::parse)
                 .collect(toList());
     }
 }
