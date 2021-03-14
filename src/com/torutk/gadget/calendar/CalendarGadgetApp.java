@@ -1,9 +1,19 @@
 /*
- * Copyright © 2016 Toru Takahahshi. All rights reserved.
+ * Copyright © 2016 Toru Takahashi. All rights reserved.
  */
 package com.torutk.gadget.calendar;
 
 import com.torutk.gadget.support.TinyGadgetSupport;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.skin.DatePickerSkin;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.awt.Desktop;
 import java.awt.desktop.SystemSleepEvent;
@@ -24,20 +34,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.skin.DatePickerSkin;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 /**
  * カレンダーを表示するJavaFXアプリケーションクラス。
- *
  */
 public class CalendarGadgetApp extends Application {
     private static final Logger logger = Logger.getLogger(CalendarGadgetApp.class.getName());
@@ -63,17 +62,16 @@ public class CalendarGadgetApp extends Application {
         rootPane = new StackPane();
         rootPane.getChildren().add(calendar);
 
-        Scene scene = new Scene(rootPane);
+        var scene = new Scene(rootPane);
         scene.getStylesheets().add(getClass().getResource("Calendar.css").toExternalForm());
 
         executor = Executors.newSingleThreadScheduledExecutor();
         crossoverDate();
         initResumeProc();
 
-        stage.setTitle("Calendar");
         stage.setScene(scene);
         stage.showingProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue == true && newValue == false) {
+            if (oldValue && !newValue) {
                 executor.shutdownNow();
             }
         });
@@ -88,7 +86,7 @@ public class CalendarGadgetApp extends Application {
      */
     private Node createDatePickerPopup(LocalDate date) {
         logger.entering(this.getClass().getName(), "createDatePickerPopup");
-        DatePicker datePicker = new DatePicker(date);
+        var datePicker = new DatePicker(date);
         // 日付セルのファクトリを定義し、曜日名（英名）をスタイルクラスに追加した日付を生成
         datePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
@@ -100,13 +98,13 @@ public class CalendarGadgetApp extends Application {
                 }
             }
         });
-        Node calendar = new DatePickerSkin(datePicker).getPopupContent();
-        return calendar;
+        return new DatePickerSkin(datePicker).getPopupContent();
     }
 
     /**
      * 指定した時間から日付が変わるまでの時間（秒）を計算する。
      * <p>
+     *
      * @return 日付が変わるまでの時間（秒）、ただし3600秒を超えている場合は、3600を返却する
      */
     private long secondsTillTomorrow(LocalDateTime time) {
@@ -125,7 +123,7 @@ public class CalendarGadgetApp extends Application {
      * スケジュールのみ実施する。
      */
     private void crossoverDate() {
-        LocalDateTime now = LocalDateTime.now();
+        var now = LocalDateTime.now();
         if (today.isBefore(now.toLocalDate())) {
             Platform.runLater(() -> {
                 today = now.toLocalDate();
@@ -135,13 +133,13 @@ public class CalendarGadgetApp extends Application {
             });
         }
         long seconds = secondsTillTomorrow(now);
-        executor.schedule(this::crossoverDate, seconds, TimeUnit.SECONDS);
+        schedule = executor.schedule(this::crossoverDate, seconds, TimeUnit.SECONDS);
         logger.config(() -> String.format("reset crossover date schedule after %d seconds.", seconds));
     }
 
     /**
      * コマンドラインオプション（名前付き値）を解析する。
-     * 
+     * <p>
      * 表示位置・大きさの指定があれば反映する。
      * 祝日設定ファイルが指定されていれば読み込む。
      */
@@ -149,16 +147,16 @@ public class CalendarGadgetApp extends Application {
         Map<String, String> params = getParameters().getNamed();
         Platform.runLater(() -> {
             if (params.containsKey("x")) {
-                stage.setX(Double.valueOf(params.get("x")));
+                stage.setX(Double.parseDouble(params.get("x")));
             }
             if (params.containsKey("y")) {
-                stage.setY(Double.valueOf(params.get("y")));
+                stage.setY(Double.parseDouble(params.get("y")));
             }
             if (params.containsKey("width")) {
-                stage.setWidth(Double.valueOf(params.get("width")));
+                stage.setWidth(Double.parseDouble(params.get("width")));
             }
             if (params.containsKey("height")) {
-                stage.setHeight(Double.valueOf(params.get("height")));
+                stage.setHeight(Double.parseDouble(params.get("height")));
             }
         });
         holidays = new Holidays(params.getOrDefault("holiday", "holidays.conf"));
@@ -171,7 +169,7 @@ public class CalendarGadgetApp extends Application {
                 : vs.length() == 2 ? Level.FINE
                 : vs.length() == 3 ? Level.FINER
                 : Level.FINEST;
-        Logger.getLogger("calendar").setLevel(verbose);
+        Logger.getLogger("").setLevel(verbose);
         Arrays.stream(Logger.getLogger("").getHandlers()).forEach(handler -> handler.setLevel(verbose));
     }
 
